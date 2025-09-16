@@ -1245,12 +1245,17 @@ document.head.appendChild(o)}initApollo();</script>
       <!-- Grid des créations -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       
-        <!-- NOUVELLE Vidéo Publicité Dior (Corrigée) -->
-        <!-- La fonctionnalité de lecture au survol est gérée par le script en bas -->
-        <div class="video-card-hover bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-purple-500/10 transition-shadow group" data-video-id="Uau7ziK0id4">
+               <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-purple-500/10 transition-shadow group">
             <div class="video-container relative aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-                <!-- Ceci est l'état initial avec la miniature, sans le lien <a> -->
-                <img src="https://img.youtube.com/vi/Uau7ziK0id4/hqdefault.jpg" alt="Animation 3D - Publicité Dior" class="object-cover w-full h-full group-hover:opacity-75 transition-opacity">
+                <!-- La vidéo est maintenant directement intégrée avec les paramètres autoplay -->
+                <iframe 
+                    src="https://www.youtube.com/embed/Uau7ziK0id4?autoplay=1&mute=1&controls=0&loop=1&playlist=Uau7ziK0id4" 
+                    title="Animation 3D - Publicité Dior"
+                    class="absolute w-full h-full" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
             </div>
             <div class="p-6">
                 <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
