@@ -2708,6 +2708,7 @@ document.head.appendChild(style);
                         const scale = (1.0 / maxDim) * 2.5;
                         
                         logoModel.position.sub(center); // Centre le modèle
+                        logoModel.position.y -= 0.2;
                         logoModel.scale.set(scale, scale, scale); // Redimensionne
 
                         scene.add(logoModel);
