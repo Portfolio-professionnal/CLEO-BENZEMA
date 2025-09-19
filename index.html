@@ -1301,8 +1301,7 @@ document.head.appendChild(o)}initApollo();</script>
 </section>
 
 <!-- ======================================================================= -->
-<!-- SCRIPT JAVASCRIPT POUR LA SECTION CRÉATIONS -->
-<!-- (À placer juste avant la fin de la balise </body>) -->
+<!-- SCRIPT JAVASCRIPT POUR LA SECTION CRÉATIONS (VERSION AMÉLIORÉE) -->
 <!-- ======================================================================= -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -1330,15 +1329,15 @@ document.head.appendChild(o)}initApollo();</script>
                 renderer.outputEncoding = THREE.sRGBEncoding;
                 container.appendChild(renderer.domElement);
                 
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                // Éclairage amélioré
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
                 scene.add(ambientLight);
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 3.0);
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
                 const loader = new THREE.GLTFLoader();
                 
-                // CORRECTION : Chemin plus robuste et gestion d'erreur améliorée
                 loader.load(
                     './RAYBAN1.glb', 
                     (gltf) => {
@@ -1354,7 +1353,6 @@ document.head.appendChild(o)}initApollo();</script>
 
                         scene.add(model);
 
-                        // CORRECTION : Vérifie si une animation existe avant de la jouer
                         if (gltf.animations && gltf.animations.length > 0) {
                             mixer = new THREE.AnimationMixer(model);
                             const action = mixer.clipAction(gltf.animations[0]);
@@ -1363,40 +1361,37 @@ document.head.appendChild(o)}initApollo();</script>
                     },
                     undefined,
                     (error) => {
-                        console.error('Erreur de chargement du modèle Ray-Ban:', error);
-                        container.innerHTML = `<p class="text-red-500 text-center text-xs p-4">Erreur de chargement du modèle 3D. Vérifiez le nom du fichier et la console (F12).</p>`;
+                        console.error('ERREUR DE CHARGEMENT DU MODÈLE:', error);
+                        container.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-red-500/10 rounded-lg"><p class="text-red-400 text-center text-sm p-4">Impossible de charger le modèle 3D.<br>Vérifiez le nom du fichier et la console (F12) pour les erreurs.</p></div>`;
                     }
                 );
 
-                renderer.domElement.addEventListener('mousedown', onMouseDown);
-                renderer.domElement.addEventListener('mousemove', onMouseMove);
-                renderer.domElement.addEventListener('mouseup', onMouseUp);
-                window.addEventListener('resize', onWindowResize);
-            }
-
-            function onMouseDown(e) { isDragging = true; previousMousePosition.x = e.clientX; }
-            function onMouseUp() { isDragging = false; }
-
-            function onMouseMove(e) {
-                if (!isDragging || !model) return;
-                const deltaMove = { x: e.clientX - previousMousePosition.x };
-                model.rotation.y += deltaMove.x * 0.01;
-                previousMousePosition.x = e.clientX;
-            }
-
-            function onWindowResize() {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.domElement.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
+                renderer.domElement.addEventListener('mouseup', () => { isDragging = false; });
+                renderer.domElement.addEventListener('mouseleave', () => { isDragging = false; }); // Arrête le drag si la souris quitte
+                renderer.domElement.addEventListener('mousemove', (e) => {
+                    if (!isDragging || !model) return;
+                    const deltaMove = e.clientX - previousMousePosition.x;
+                    model.rotation.y += deltaMove * 0.01;
+                    previousMousePosition.x = e.clientX;
+                });
+                window.addEventListener('resize', () => {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                });
             }
 
             function animate() {
                 requestAnimationFrame(animate);
                 const delta = clock.getDelta();
+
+                // Si une animation interne existe, on la joue
                 if (mixer) {
                     mixer.update(delta);
-                } else if (model && !isDragging) {
-                    // CORRECTION : Rotation par défaut si aucune animation n'est présente
+                } 
+                // Sinon, et si l'utilisateur n'interagit pas, on fait tourner le modèle
+                else if (model && !isDragging) {
                     model.rotation.y += 0.005;
                 }
                 
@@ -1410,7 +1405,6 @@ document.head.appendChild(o)}initApollo();</script>
         }
     });
 </script>
-
 
 
 
