@@ -2486,7 +2486,7 @@ window.addEventListener('scroll', function() {
 
 </script>
 <!-- ======================================================================= -->
-<!-- SCRIPT FINAL POUR TOUTES LES ANIMATIONS 3D (AVEC ENVIRONNEMENT .EXR) -->
+<!-- SCRIPT FINAL POUR TOUTES LES ANIMATIONS 3D (AVEC ENVIRONNEMENT .HDR) -->
 <!-- ======================================================================= -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -2547,7 +2547,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initCanva();
     }
 
-    // --- Scène 3D pour Ray-Ban (AVEC ENVIRONNEMENT .EXR) ---
+    // --- Scène 3D pour Ray-Ban (AVEC ENVIRONNEMENT .HDR) ---
     const raybanContainer = document.getElementById('rayban-3d-container');
     if (raybanContainer) {
         let scene, camera, renderer, model, mixer, clock;
@@ -2566,19 +2566,18 @@ document.addEventListener('DOMContentLoaded', () => {
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.outputEncoding = THREE.sRGBEncoding;
             raybanContainer.appendChild(renderer.domElement);
-
-            // NOUVEAU : Chargement de l'environnement EXR
+            
+            // On utilise maintenant RGBELoader pour les fichiers .hdr
             const pmremGenerator = new THREE.PMREMGenerator(renderer);
             pmremGenerator.compileEquirectangularShader();
             
-            new THREE.EXRLoader() // On utilise le bon chargeur
-                .load('brown_photostudio_02_4k.exr', (texture) => { // <-- Votre nom de fichier
+            new THREE.RGBELoader()
+                .setDataType(THREE.UnsignedByteType)
+                .load('studio_env.hdr', (texture) => { // <-- Assurez-vous que le nom correspond à votre fichier .hdr
                     const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-                    scene.environment = envMap;
+                    scene.environment = envMap; // Applique la lumière et les reflets
                     texture.dispose();
                     pmremGenerator.dispose();
-                }, undefined, (error) => {
-                     console.error('ERREUR DE CHARGEMENT DE L\'ENVIRONNEMENT:', error);
                 });
 
             const loader = new THREE.GLTFLoader();
@@ -2587,7 +2586,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const box = new THREE.Box3().setFromObject(model);
                 const size = box.getSize(new THREE.Vector3());
                 const center = box.getCenter(new THREE.Vector3());
-                
                 if (size.length() > 0) {
                     const maxDim = Math.max(size.x, size.y, size.z);
                     const scale = 2.5 / maxDim;
@@ -2601,8 +2599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     gltf.animations.forEach(clip => mixer.clipAction(clip).play());
                 }
             }, undefined, (error) => console.error('ERREUR DE CHARGEMENT RAYBAN:', error));
-            
-            // ... (Le reste du code reste identique) ...
+
             renderer.domElement.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
             renderer.domElement.addEventListener('mouseup', () => { isDragging = false; });
             renderer.domElement.addEventListener('mouseleave', () => { isDragging = false; });
@@ -2625,7 +2622,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const delta = clock.getDelta();
             if (mixer) mixer.update(delta);
             else if (model && !isDragging) model.rotation.y += 0.005;
-            
             if(renderer && scene && camera) renderer.render(scene, camera);
         }
         initRayban();
@@ -2633,7 +2629,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-
 
 </body>
 </html>
