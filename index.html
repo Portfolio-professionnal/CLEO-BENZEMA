@@ -1228,222 +1228,189 @@ document.head.appendChild(o)}initApollo();</script>
   </section>
 </div>
 
-<!-- Section Créations de Contenu -->
-<section id="content-creation" class="py-20 bg-neutral-800 text-white relative overflow-hidden">
-    <!-- Background elements -->
+
+<!-- ======================================================================= -->
+<!-- NOUVELLE SECTION "CRÉATIONS" - STYLE THE ALCHEMIST -->
+<!-- ======================================================================= -->
+<section id="content-creation" class="py-20 sm:py-32 bg-neutral-900 text-white relative overflow-hidden">
+    <!-- Éléments de fond (lumières diffuses) -->
     <div class="absolute inset-0 z-0">
-      <div class="absolute top-1/3 -left-20 w-64 h-64 bg-purple-600/10 rounded-full filter blur-[80px]"></div>
-      <div class="absolute bottom-1/3 -right-20 w-64 h-64 bg-cyan-600/10 rounded-full filter blur-[80px]"></div>
+        <div class="absolute -top-20 -left-40 w-96 h-96 bg-purple-600/20 rounded-full filter blur-[120px] animate-pulse"></div>
+        <div class="absolute -bottom-20 -right-40 w-96 h-96 bg-cyan-600/20 rounded-full filter blur-[120px] animate-pulse delay-1000"></div>
     </div>
     
     <div class="container mx-auto px-4 relative z-10">
-      <div class="flex flex-col items-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Mes Créations LinkedIn</h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-purple-400 to-cyan-500 rounded-full"></div>
-        <p class="text-gray-300 text-center max-w-2xl mt-6">
-          Découvrez mes créations de contenu sur LinkedIn : fiches de présentation, carrousels informatifs, vidéos d'annonce et tutoriels. Chaque publication reflète mon expertise en marketing digital et ma capacité à créer du contenu engageant.
-        </p>
-      </div>
-      
-      <!-- Grid des créations -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      
-               <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-purple-500/10 transition-shadow group">
-            <div class="video-container relative aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-                <!-- La vidéo est maintenant directement intégrée avec les paramètres autoplay -->
-                <iframe 
-                    src="https://www.youtube.com/embed/Uau7ziK0id4?autoplay=1&mute=1&controls=0&loop=1&playlist=Uau7ziK0id4" 
-                    title="Animation 3D - Publicité Dior"
-                    class="absolute w-full h-full" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-                              <!-- Mute/Unmute Button -->
-                <button onclick="toggleSound()" class="absolute bottom-3 right-3 z-20 p-2 bg-black/50 rounded-full text-white hover:bg-black/75 transition-colors focus:outline-none" aria-label="Activer/Désactiver le son">
-                    <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-mute-fill" viewBox="0 0 16 16">
-                      <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10H1.5A.5.5 0 0 1 1 9.5v-3A.5.5 0 0 1 1.5 6h2.325l2.363-2.39a.5.5 0 0 1 .529-.06zM10.025 8.5a.5.5 0 0 0 .707.707L12.25 7.707l1.518 1.518a.5.5 0 0 0 .707-.707L12.957 7l1.518-1.518a.5.5 0 0 0-.707-.707L12.25 6.293 10.732 4.775a.5.5 0 1 0-.707.707L11.543 7l-1.518 1.5z"/>
-                    </svg>
-                    <svg id="icon-unmuted" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-up-fill hidden" viewBox="0 0 16 16">
-                      <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
-                      <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
-                      <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10H1.5A.5.5 0 0 1 1 9.5v-3A.5.5 0 0 1 1.5 6h2.325l2.363-2.39a.5.5 0 0 1 .529-.06z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
-                    Vidéo Marketing
-                </div>
-                <h3 class="text-xl font-bold mb-2">Animation 3D - Publicité Rayban</h3>
-                <p class="text-gray-300 mb-4">
-                    Création d'une vidéo publicitaire en animation 3D pour la marque Rayban, mettant en valeur le produit avec un style élégant et moderne.
-                </p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Blender</span>
-                    <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Capcut</span>
-                    <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Vidéo</span>
+        <!-- Titre de la section -->
+        <div class="flex flex-col items-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Mes Créations 3D</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full"></div>
+            <p class="text-gray-400 text-center max-w-2xl mt-6">
+                Explorez mes projets en 3D, de la modélisation photoréaliste à l'animation publicitaire. Chaque création est une fusion de technique et de créativité.
+            </p>
+        </div>
+
+        <!-- MISE EN SCÈNE DU PROJET RAY-BAN -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- COLONNE GAUCHE : MODÈLE 3D INTERACTIF -->
+            <div class="w-full aspect-square relative">
+                <!-- Effet de "spotlight" derrière le modèle -->
+                <div class="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/40 via-transparent to-transparent"></div>
+                
+                <!-- Le conteneur qui accueillera votre scène 3D -->
+                <div id="rayban-3d-container" class="w-full h-full cursor-grab active:cursor-grabbing">
+                    <!-- Le script injectera le canvas 3D ici -->
                 </div>
             </div>
-        </div>
-      
-        <!-- Carrousel Informatif -->
-        <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-cyan-500/10 transition-shadow group">
-          <div class="aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-            <a href="https://www.linkedin.com/posts/axeobim_carrousel-axeobim-activity-7328756706178396160-hPP-/" target="_blank" class="block w-full h-full">
-              <img src="https://i.postimg.cc/R0Vd6xLz/aXEOBIM2.png" alt="Carrousel Informatif" class="object-cover w-full h-full">
-            </a>
-          </div>
-          <div class="p-6">
-            <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4">
-              Content Marketing
-            </div>
-            <h3 class="text-xl font-bold mb-2">Carrousel Informatif</h3>
-            <p class="text-gray-300 mb-4">
-              Création d'un carrousel LinkedIn engageant pour présenter des informations de manière visuelle et structurée, optimisant l'engagement et la portée organique.
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">LinkedIn</span>
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Carrousel</span>
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Engagement</span>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Vidéo Annonce Salon -->
-        <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-purple-500/10 transition-shadow group">
-          <div class="aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-            <a href="https://www.linkedin.com/posts/axeobim_axeobim-bim-ged-activity-7285611630913024000-sDyE/" target="_blank" class="block w-full h-full">
-              <img src="https://i.postimg.cc/ncJv9tnw/AXEOBIM-5.png" alt="Annonce Participation Salon" class="object-cover w-full h-full">
-            </a>
-          </div>
-          <div class="p-6">
-            <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
-              Vidéo Marketing
-            </div>
-            <h3 class="text-xl font-bold mb-2">Annonce Participation Salon</h3>
-            <p class="text-gray-300 mb-4">
-              Création d'une vidéo d'annonce dynamique pour promouvoir la participation à un salon professionnel, alliant créativité et message commercial percutant.
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">CapCut</span>
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Événementiel</span>
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Vidéo</span>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Tutoriel Plateforme -->
-        <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-cyan-500/10 transition-shadow group">
-          <div class="aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-            <a href="https://www.linkedin.com/posts/axeobim_bim-axeobim-innovation-activity-7272207471446745088-6_jQ/" target="_blank" class="block w-full h-full">
-              <img src="https://i.postimg.cc/rs659Bxs/AXEOBIM4.png" alt="Tutoriel Plateforme" class="object-cover w-full h-full">
-            </a>
-          </div>
-          <div class="p-6">
-            <div class="inline-block px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4">
-              Tutoriel
-            </div>
-            <h3 class="text-xl font-bold mb-2">Tutoriel Plateforme</h3>
-            <p class="text-gray-300 mb-4">
-              Conception d'un tutoriel vidéo explicatif pour présenter les fonctionnalités d'une plateforme, démontrant ma capacité à créer du contenu éducatif et technique.
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Tutorial</span>
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Formation</span>
-              <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Technique</span>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Visuel Illusion d'Optique -->
-        <div class="bg-neutral-900 rounded-xl overflow-hidden border border-neutral-700 shadow-lg hover:shadow-purple-500/10 transition-shadow group">
-          <div class="aspect-video w-full bg-neutral-800 flex items-center justify-center overflow-hidden">
-            <a href="https://www.linkedin.com/posts/axeobim_axeobim-bim-illusionoptique-activity-7236709544997892097-eswu/" target="_blank" class="block w-full h-full">
-              <img src="https://i.postimg.cc/d0pCqbW6/AXEOBIM6.png" alt="Visuel Illusion d'Optique" class="object-cover w-full h-full">
-            </a>
-          </div>
-          <div class="p-6">
-            <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
-              Design Créatif
-            </div>
-            <h3 class="text-xl font-bold mb-2">Visuel Illusion d'Optique</h3>
-            <p class="text-gray-300 mb-4">
-              Création d'un visuel créatif jouant sur l'illusion d'optique pour captiver l'audience et démontrer mes compétences en design graphique innovant.
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Créativité</span>
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Design</span>
-              <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Innovation</span>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Call to Action -->
-        <div class="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-xl p-8 border border-neutral-700 shadow-lg flex flex-col justify-center items-center text-center">
-          <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold mb-4">Découvrez Plus</h3>
-          <p class="text-gray-300 mb-6">
-            Suivez-moi sur LinkedIn pour découvrir plus de créations et d'insights sur le marketing digital.
-          </p>
-          <a href="https://www.linkedin.com/in/cl%C3%A9o-benzema-3709172a1/" target="_blank" class="inline-flex justify-center items-center px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-medium rounded-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
-            Suivre sur LinkedIn
-            <svg class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.454C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
-            </svg>
-          </a>
-        </div>
-      
-      </div>
-    </div>
-    
-</section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Sélectionne toutes les cartes qui doivent avoir la lecture au survol
-        const videoCards = document.querySelectorAll('.video-card-hover');
-
-        videoCards.forEach(card => {
-            const videoContainer = card.querySelector('.video-container');
-            if (!videoContainer) return;
-
-            // Stocke le contenu HTML original (l'image miniature)
-            const originalContent = videoContainer.innerHTML;
-            const videoId = card.dataset.videoId;
-
-            // Événement lorsque la souris entre sur la carte
-            card.addEventListener('mouseenter', () => {
-                if (videoId) {
-                    // Remplace le contenu par le lecteur vidéo YouTube
-                    // autoplay=1 démarre la vidéo
-                    // mute=1 est nécessaire pour que l'autoplay fonctionne sur la plupart des navigateurs
-                    // controls=0 masque les contrôles de YouTube pour un look plus propre
-                    // loop=1 & playlist=videoId est une astuce pour faire tourner la vidéo en boucle
-                    videoContainer.innerHTML = `
+            <!-- COLONNE DROITE : VIDÉO & DESCRIPTION -->
+            <div class="space-y-8">
+                <!-- Vidéo YouTube -->
+                <div>
+                    <div class="aspect-video w-full rounded-lg overflow-hidden border border-neutral-700">
                         <iframe 
-                            src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}" 
-                            class="absolute w-full h-full" 
+                            src="https://www.youtube.com/embed/Uau7ziK0id4" 
+                            title="Animation 3D - Publicité Ray-Ban" 
+                            class="w-full h-full" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
                         </iframe>
-                    `;
-                }
-            });
+                    </div>
+                </div>
 
-            // Événement lorsque la souris quitte la carte
-            card.addEventListener('mouseleave', () => {
-                // Restaure le contenu original (l'image miniature)
-                videoContainer.innerHTML = originalContent;
-            });
-        });
+                <!-- Description -->
+                <div class="bg-neutral-800/50 p-8 rounded-xl border border-neutral-700 backdrop-blur-sm">
+                    <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
+                        Vidéo Marketing
+                    </div>
+                    <h3 class="text-3xl font-bold mb-3">Publicité 3D - Ray-Ban</h3>
+                    <p class="text-gray-300 mb-6">
+                        Création d'une vidéo publicitaire complète en animation 3D pour la marque Ray-Ban. Ce projet inclut la modélisation photoréaliste du produit, le texturing, l'éclairage de la scène et l'animation finale, avec un montage de style élégant et moderne.
+                    </p>
+                    <div class="border-t border-neutral-700 pt-4 flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Blender</span>
+                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Photoréalisme</span>
+                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Animation</span>
+                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">CapCut</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================================= -->
+<!-- SCRIPT JAVASCRIPT POUR LA SECTION CRÉATIONS -->
+<!-- (À placer juste avant la fin de la balise </body>) -->
+<!-- ======================================================================= -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('rayban-3d-container');
+        if (container) {
+            let scene, camera, renderer, model, mixer, clock;
+            let isDragging = false, previousMousePosition = { x: 0, y: 0 };
+
+            // 1. Initialisation de la scène
+            function init() {
+                scene = new THREE.Scene();
+                clock = new THREE.Clock();
+                
+                // Caméra
+                camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+                camera.position.z = 5;
+
+                // Renderer
+                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                renderer.outputEncoding = THREE.sRGBEncoding;
+                container.appendChild(renderer.domElement);
+                
+                // Lumières
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+                directionalLight.position.set(5, 10, 7.5);
+                scene.add(directionalLight);
+
+                // Chargement du modèle
+                const loader = new THREE.GLTFLoader();
+                loader.load(
+                    'RAYBAN1.glb', // Assurez-vous que ce fichier est au bon endroit
+                    (gltf) => {
+                        model = gltf.scene;
+                        
+                        // Centrer et redimensionner
+                        const box = new THREE.Box3().setFromObject(model);
+                        const size = box.getSize(new THREE.Vector3());
+                        const center = box.getCenter(new THREE.Vector3());
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        const scale = 2.5 / maxDim;
+                        model.scale.set(scale, scale, scale);
+                        model.position.sub(center.multiplyScalar(scale));
+
+                        scene.add(model);
+
+                        // Gestion de l'animation
+                        if (gltf.animations && gltf.animations.length) {
+                            mixer = new THREE.AnimationMixer(model);
+                            const action = mixer.clipAction(gltf.animations[0]);
+                            action.play();
+                        }
+                    },
+                    undefined,
+                    (error) => console.error('Erreur de chargement du modèle Ray-Ban:', error)
+                );
+
+                // Listeners pour les contrôles
+                renderer.domElement.addEventListener('mousedown', onMouseDown);
+                renderer.domElement.addEventListener('mousemove', onMouseMove);
+                renderer.domElement.addEventListener('mouseup', onMouseUp);
+                window.addEventListener('resize', onWindowResize);
+            }
+
+            // 2. Contrôles à la souris
+            function onMouseDown(e) {
+                isDragging = true;
+                previousMousePosition.x = e.clientX;
+            }
+
+            function onMouseMove(e) {
+                if (!isDragging || !model) return;
+                const deltaMove = { x: e.clientX - previousMousePosition.x };
+                model.rotation.y += deltaMove.x * 0.01;
+                previousMousePosition.x = e.clientX;
+            }
+
+            function onMouseUp() {
+                isDragging = false;
+            }
+
+            // 3. Redimensionnement
+            function onWindowResize() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+
+            // 4. Boucle d'animation
+            function animate() {
+                requestAnimationFrame(animate);
+                const delta = clock.getDelta();
+                if (mixer) {
+                    mixer.update(delta);
+                }
+                renderer.render(scene, camera);
+            }
+
+            init();
+            animate();
+        }
     });
 </script>
+
 
 
 
