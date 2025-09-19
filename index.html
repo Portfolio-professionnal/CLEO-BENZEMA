@@ -2580,7 +2580,7 @@ document.addEventListener('DOMContentLoaded', () => {
             scene.add(directionalLight);
 
             const loader = new THREE.GLTFLoader();
-            loader.load('./RAYBAN1.glb', (gltf) => {
+            loader.load('./RAYBAN.glb', (gltf) => {
                 model = gltf.scene;
                 
                 const box = new THREE.Box3().setFromObject(model);
