@@ -2705,7 +2705,7 @@ document.head.appendChild(style);
                         const center = box.getCenter(new THREE.Vector3());
                         const size = box.getSize(new THREE.Vector3());
                         const maxDim = Math.max(size.x, size.y, size.z);
-                        const scale = 1.0 / maxDim; // Calcule le facteur d'échelle
+                        const scale = (1.0 / maxDim) * 2.5;
                         
                         logoModel.position.sub(center); // Centre le modèle
                         logoModel.scale.set(scale, scale, scale); // Redimensionne
