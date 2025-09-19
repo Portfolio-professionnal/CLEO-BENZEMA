@@ -2497,14 +2497,11 @@ window.addEventListener('scroll', function() {
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
+    // Le reste de votre code qui initialise les scènes 3D...
+    // Ce code est identique à celui de mon message précédent qui résout le problème.
+    // Assurez-vous de copier-coller l'intégralité du bloc.
+
     document.addEventListener('DOMContentLoaded', () => {
-
-        // On vérifie que THREE est bien chargé
-        if (typeof THREE === 'undefined') {
-            console.error("Three.js n'est pas chargé !");
-            return;
-        }
-
         // --- Scène 3D pour le logo Canva ---
         const canvaContainer = document.getElementById('canva-logo-container');
         if (canvaContainer) {
@@ -2524,8 +2521,7 @@ window.addEventListener('scroll', function() {
                 directionalLight.position.set(1, 2, 3);
                 scene.add(directionalLight);
                 
-                // On utilise le loader importé
-                const loader = new GLTFLoader();
+                const loader = new GLTFLoader(); // Changement ici
                 loader.load('./Canva.glb', (gltf) => {
                     logoModel = gltf.scene;
                     const box = new THREE.Box3().setFromObject(logoModel);
@@ -2548,7 +2544,6 @@ window.addEventListener('scroll', function() {
                     logoModel.rotation.y += deltaX * 0.02;
                     previousMousePosition.x = e.clientX;
                 });
-
                 function animateCanva() {
                     requestAnimationFrame(animateCanva);
                     if (logoModel && !isDragging) { logoModel.rotation.y += 0.005; }
@@ -2559,31 +2554,27 @@ window.addEventListener('scroll', function() {
             initCanva();
         }
 
-        // --- Scène 3D pour Ray-Ban (AVEC ENVIRONNEMENT .HDR) ---
+        // --- Scène 3D pour Ray-Ban ---
         const raybanContainer = document.getElementById('rayban-3d-container');
         if (raybanContainer) {
-            let scene, camera, renderer, model, mixer, clock;
+            let scene, camera, renderer, model;
             let isDragging = false, previousMousePosition = { x: 0 };
 
             function initRayban() {
                 scene = new THREE.Scene();
-                clock = new THREE.Clock();
-                
                 camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 1000);
-                camera.position.set(0, 0, 5); // Position de base
-
+                camera.position.set(0, 0, 5);
                 renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                 renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
                 renderer.setPixelRatio(window.devicePixelRatio);
                 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-                renderer.outputEncoding = THREE.sRGBEncoding; // Correction: ancienne syntaxe était outputEncoding
+                renderer.outputColorSpace = THREE.SRGBColorSpace; // Syntaxe moderne
                 raybanContainer.appendChild(renderer.domElement);
                 
                 const pmremGenerator = new THREE.PMREMGenerator(renderer);
                 pmremGenerator.compileEquirectangularShader();
                 
-                // On utilise le loader importé
-                new RGBELoader()
+                new RGBELoader() // Changement ici
                     .load('brown_photostudio_02_4k.hdr', (texture) => {
                         const envMap = pmremGenerator.fromEquirectangular(texture).texture;
                         scene.environment = envMap;
@@ -2591,8 +2582,7 @@ window.addEventListener('scroll', function() {
                         pmremGenerator.dispose();
                     });
 
-                // On utilise le loader importé
-                const loader = new GLTFLoader();
+                const loader = new GLTFLoader(); // Changement ici
                 loader.load('./RAYBAN.glb', (gltf) => {
                     model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
@@ -2600,7 +2590,7 @@ window.addEventListener('scroll', function() {
                     const center = box.getCenter(new THREE.Vector3());
                     if (size.length() > 0) {
                         const maxDim = Math.max(size.x, size.y, size.z);
-                        const scale = 2.5 / maxDim; // Augmentons un peu l'échelle
+                        const scale = 2.5 / maxDim;
                         model.scale.set(scale, scale, scale);
                         model.position.sub(center.multiplyScalar(scale));
                     }
@@ -2616,7 +2606,6 @@ window.addEventListener('scroll', function() {
                     model.rotation.y += deltaMove * 0.01;
                     previousMousePosition.x = e.clientX;
                 });
-
                 window.addEventListener('resize', () => {
                     if(!camera || !renderer) return;
                     camera.aspect = raybanContainer.clientWidth / raybanContainer.clientHeight;
@@ -2627,9 +2616,7 @@ window.addEventListener('scroll', function() {
 
             function animateRayban() {
                 requestAnimationFrame(animateRayban);
-                const delta = clock.getDelta();
-                if (mixer) mixer.update(delta);
-                else if (model && !isDragging) { /* On arrête la rotation auto pour mieux voir */ }
+                if (model && !isDragging) { model.rotation.y += 0.005; }
                 if(renderer && scene && camera) renderer.render(scene, camera);
             }
             initRayban();
