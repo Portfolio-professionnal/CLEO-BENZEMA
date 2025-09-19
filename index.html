@@ -2562,7 +2562,7 @@ window.addEventListener('scroll', function() {
         function initRayban() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 5);
+            camera.position.set(0, 0, 6);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
