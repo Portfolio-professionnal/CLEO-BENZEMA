@@ -2515,7 +2515,11 @@ window.addEventListener('scroll', function() {
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 2, 3);
             scene.add(directionalLight);
-            
+
+            const redLight = new THREE.PointLight(0xff0000, 50, 10); // Couleur rouge, Intensité, Distance
+            redLight.position.set(2, 2, 3); // Positionnez-la devant et sur le côté
+            scene.add(redLight);
+
             const loader = new GLTFLoader();
             loader.load('./Canva.glb', (gltf) => {
                 logoModel = gltf.scene;
