@@ -2574,7 +2574,7 @@ window.addEventListener('scroll', function() {
             pmremGenerator.compileEquirectangularShader();
             
             new RGBELoader()
-                .load('brown_photostudio_02_4k.hdr', (texture) => {
+                .load('warm_restaurant_night_4k.hdr', (texture) => {
                     const envMap = pmremGenerator.fromEquirectangular(texture).texture;
                     scene.environment = envMap;
                     texture.dispose();
