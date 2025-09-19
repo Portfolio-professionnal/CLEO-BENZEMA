@@ -1246,62 +1246,44 @@ document.head.appendChild(o)}initApollo();</script>
     </div>
     
     <div class="container mx-auto px-4 relative z-10">
-        <!-- Titre de la section -->
-        <div class="flex flex-col items-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Mes Créations 3D</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full"></div>
-            <p class="text-gray-400 text-center max-w-2xl mt-6">
-                Explorez mes projets en 3D, de la modélisation photoréaliste à l'animation publicitaire. Chaque création est une fusion de technique et de créativité.
+    <div class="flex flex-col items-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Mes Créations</h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+
+        <div class="border border-neutral-800 p-8 rounded-lg">
+            <h3 class="text-2xl font-bold text-cyan-400 mb-2">PUBLICITÉ 3D - RAY-BAN</h3>
+            <p class="text-neutral-400 mb-4">
+                Création d'une vidéo publicitaire complète et modélisation photoréaliste du produit.
             </p>
-        </div>
-
-        <!-- MISE EN SCÈNE DU PROJET RAY-BAN -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            <!-- COLONNE GAUCHE : MODÈLE 3D INTERACTIF -->
-            <div class="w-full aspect-square relative">
-                <!-- Effet de "spotlight" derrière le modèle -->
-                
-                <!-- Le conteneur qui accueillera votre scène 3D -->
-                <div id="rayban-3d-container" class="w-full h-full cursor-grab active:cursor-grabbing">
-                    <!-- Le script injectera le canvas 3D ici -->
-                </div>
-            </div>
-
-            <!-- COLONNE DROITE : VIDÉO & DESCRIPTION -->
-            <div class="space-y-8">
-                <!-- Vidéo YouTube -->
-                <div>
-                    <div class="aspect-video w-full rounded-lg overflow-hidden border border-neutral-700">
-                        <iframe 
-                            src="https://www.youtube.com/embed/Uau7ziK0id4" 
-                            title="Animation 3D - Publicité Ray-Ban" 
-                            class="w-full h-full" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                            allowfullscreen>
-                        </iframe>
-                    </div>
-                </div>
-
-                <!-- Description -->
-                <div class="bg-neutral-800/50 p-8 rounded-xl border border-neutral-700 backdrop-blur-sm">
-                    <div class="inline-block px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm font-medium mb-4">
-                        Vidéo Marketing
-                    </div>
-                    <h3 class="text-3xl font-bold mb-3">Publicité 3D - Ray-Ban</h3>
-                    <p class="text-gray-300 mb-6">
-                        Création d'une vidéo publicitaire complète en animation 3D pour la marque Ray-Ban. Ce projet inclut la modélisation photoréaliste du produit, le texturing, l'éclairage de la scène et l'animation finale, avec un montage de style élégant et moderne.
-                    </p>
-                    <div class="border-t border-neutral-700 pt-4 flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Blender</span>
-                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Photoréalisme</span>
-                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">Animation</span>
-                        <span class="px-3 py-1 bg-neutral-700 text-purple-400 rounded-full text-xs">CapCut</span>
-                    </div>
-                </div>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Blender</span>
+                <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Photoréalisme</span>
+                <span class="px-3 py-1 bg-neutral-700 text-cyan-400 rounded-full text-xs">Animation</span>
             </div>
         </div>
+
+        <div id="rayban-3d-container" class="w-full aspect-square cursor-grab active:cursor-grabbing">
+            </div>
+
+        <div class="flex items-center justify-center aspect-square">
+             <img src="URL_VERS_VOTRE_IMAGE_GEOMETRIQUE.svg" alt="Element décoratif" class="w-2/3 h-2/3 opacity-50"/>
+        </div>
+
+        <div class="border border-neutral-800 p-2 rounded-lg aspect-video">
+            <iframe 
+                src="https://www.youtube.com/embed/Uau7ziK0id4" 
+                title="Animation 3D - Publicité Ray-Ban" 
+                class="w-full h-full rounded-md" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        </div>
+</div>
     </div>
 </section>
 
@@ -2493,11 +2475,14 @@ window.addEventListener('scroll', function() {
 <!-- SCRIPT FINAL POUR TOUTES LES ANIMATIONS 3D (AVEC ENVIRONNEMENT .HDR) -->
 <!-- ======================================================================= -->
 <script type="module">
+    // --- IMPORTS NÉCESSAIRES POUR THREE.JS ET LES EFFETS ---
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-    // --- Scène 3D pour le logo Canva ---
+    // --- Scène 3D pour le logo Canva (inchangée) ---
     const canvaContainer = document.getElementById('canva-logo-container');
     if (canvaContainer) {
         let scene, camera, renderer, logoModel;
@@ -2515,11 +2500,6 @@ window.addEventListener('scroll', function() {
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
             directionalLight.position.set(1, 2, 3);
             scene.add(directionalLight);
-
-            const redLight = new THREE.PointLight(0xff0000, 50, 10); // Couleur rouge, Intensité, Distance
-            redLight.position.set(2, 2, 3); // Positionnez-la devant et sur le côté
-            scene.add(redLight);
-
             const loader = new GLTFLoader();
             loader.load('./Canva.glb', (gltf) => {
                 logoModel = gltf.scene;
@@ -2533,7 +2513,6 @@ window.addEventListener('scroll', function() {
                 logoModel.position.y -= 0.2;
                 scene.add(logoModel);
             }, undefined, (error) => console.error('Erreur chargement Canva:', error));
-            
             canvaContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
             canvaContainer.addEventListener('pointerup', () => { isDragging = false; });
             canvaContainer.addEventListener('pointerleave', () => { isDragging = false; });
@@ -2553,34 +2532,47 @@ window.addEventListener('scroll', function() {
         initCanva();
     }
 
-    // --- Scène 3D pour Ray-Ban ---
+    // --- Scène 3D pour Ray-Ban (AVEC TOUTES LES MODIFICATIONS) ---
     const raybanContainer = document.getElementById('rayban-3d-container');
     if (raybanContainer) {
-        let scene, camera, renderer, model;
+        let scene, camera, renderer, model, composer;
         let isDragging = false, previousMousePosition = { x: 0 };
 
         function initRayban() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 5);
+            
+            // --- CORRECTIONS CAMÉRA ---
+            // On augmente la distance de vue (dernier chiffre) pour éviter que les branches soient coupées
+            camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 2000); 
+            // On rapproche la caméra (z=4) pour que les lunettes paraissent plus grosses
+            camera.position.set(0, 0, 4); 
+
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             raybanContainer.appendChild(renderer.domElement);
-            
-            const pmremGenerator = new THREE.PMREMGenerator(renderer);
-            pmremGenerator.compileEquirectangularShader();
-            
-            new RGBELoader()
-                .load('brown_photostudio_02_4k.hdr', (texture) => {
-                    const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-                    scene.environment = envMap;
-                    texture.dispose();
-                    pmremGenerator.dispose();
-                });
 
+            // --- MISE EN PLACE DE L'EFFET BLOOM (NÉON) ---
+            const renderScene = new RenderPass(scene, camera);
+            const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+            bloomPass.threshold = 0;
+            bloomPass.strength = 1.2; // Vous pouvez jouer avec cette valeur (ex: 0.8, 1.5, 2.0)
+            bloomPass.radius = 0.5;
+
+            composer = new EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+            // --- FIN DE LA MISE EN PLACE DE L'EFFET ---
+
+            // On ajoute des lumières simples pour un bon éclairage
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+            
             const loader = new GLTFLoader();
             loader.load('./RAYBAN.glb', (gltf) => {
                 model = gltf.scene;
@@ -2605,19 +2597,26 @@ window.addEventListener('scroll', function() {
                 model.rotation.y += deltaMove * 0.01;
                 previousMousePosition.x = e.clientX;
             });
+
             window.addEventListener('resize', () => {
                 if(!camera || !renderer) return;
-                camera.aspect = raybanContainer.clientWidth / raybanContainer.clientHeight;
+                const width = raybanContainer.clientWidth;
+                const height = raybanContainer.clientHeight;
+                camera.aspect = width / height;
                 camera.updateProjectionMatrix();
-                renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
+                renderer.setSize(width, height);
+                composer.setSize(width, height); // On redimensionne aussi le composer
             });
         }
 
         function animateRayban() {
             requestAnimationFrame(animateRayban);
             if (model && !isDragging) { model.rotation.y += 0.005; }
-            if(renderer && scene && camera) renderer.render(scene, camera);
+            
+            // On utilise le composer pour faire le rendu, et non plus le renderer directement
+            if(composer) composer.render(); 
         }
+
         initRayban();
         animateRayban();
     }
