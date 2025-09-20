@@ -2516,7 +2516,7 @@ window.addEventListener('scroll', function() {
             
             const loader = new GLTFLoader();
             // ASSURE-TOI QUE LE NOM DU FICHIER EST CORRECT
-            loader.load('./hologramme.glb', (gltf) => {
+            loader.load('./AXEOBIMHOLOGRAM.glb', (gltf) => {
                 hologramModel = gltf.scene;
                 const box = new THREE.Box3().setFromObject(hologramModel);
                 const center = box.getCenter(new THREE.Vector3());
