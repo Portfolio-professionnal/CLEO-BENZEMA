@@ -2496,87 +2496,61 @@ window.addEventListener('scroll', function() {
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-    
-    // NOUVELLES IMPORTATIONS POUR LE BLOOM
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-    // --- Scène 3D pour l'Hologramme (anciennement Canva) ---
-    const hologramContainer = document.getElementById('hologram-3d-container');
-    if (hologramContainer) {
-        let scene, camera, renderer, hologramModel, composer; // Ajout de composer
+    // --- Scène 3D pour le logo Canva ---
+    const canvaContainer = document.getElementById('canva-logo-container');
+    if (canvaContainer) {
+        let scene, camera, renderer, logoModel;
         let isDragging = false, previousMousePosition = { x: 0 };
-        
-        function initHologram() {
+        function initCanva() {
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, hologramContainer.clientWidth / hologramContainer.clientHeight, 0.1, 1000);
+            camera = new THREE.PerspectiveCamera(75, canvaContainer.clientWidth / canvaContainer.clientHeight, 0.1, 1000);
             camera.position.z = 1.5;
-            
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(hologramContainer.clientWidth, hologramContainer.clientHeight);
+            renderer.setSize(canvaContainer.clientWidth, canvaContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
-            hologramContainer.appendChild(renderer.domElement);
-            
-            // Éclairage de base (peut être faible car l'objet est émissif)
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            canvaContainer.appendChild(renderer.domElement);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
             scene.add(ambientLight);
-            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 2, 3);
+            scene.add(directionalLight);
+
+            const redLight = new THREE.PointLight(0xff0000, 50, 10); // Couleur rouge, Intensité, Distance
+            redLight.position.set(2, 2, 3); // Positionnez-la devant et sur le côté
+            scene.add(redLight);
+
             const loader = new GLTFLoader();
-            // ASSURE-TOI QUE LE CHEMIN VERS TON FICHIER EST CORRECT
-            loader.load('./hologramme.glb', (gltf) => { // REMPLACE PAR LE BON NOM DE FICHIER
-                hologramModel = gltf.scene;
-                
-                // Centrage et mise à l'échelle automatique du modèle
-                const box = new THREE.Box3().setFromObject(hologramModel);
+            loader.load('./AXEOBIMHOLOGRAM.glb', (gltf) => {
+                logoModel = gltf.scene;
+                const box = new THREE.Box3().setFromObject(logoModel);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = (1.0 / maxDim) * 2.0; // Ajuste le "2.0" pour changer la taille
-                
-                hologramModel.scale.set(scale, scale, scale);
-                hologramModel.position.sub(center.multiplyScalar(scale));
-                
-                scene.add(hologramModel);
-            }, undefined, (error) => console.error('Erreur chargement Hologramme:', error));
-
-            // --- Post-processing pour l'effet de "Glare" (Bloom) ---
-            const renderScene = new RenderPass(scene, camera);
-            const bloomPass = new UnrealBloomPass(
-              new THREE.Vector2(hologramContainer.clientWidth, hologramContainer.clientHeight),
-              1.8,    // strength (force du halo, augmente pour plus de "peps")
-              0.5,    // radius (largeur du halo)
-              0.1     // threshold (seuil de luminosité, baisse pour faire briller plus)
-            );
-
-            composer = new EffectComposer(renderer);
-            composer.addPass(renderScene);
-            composer.addPass(bloomPass);
-
-            // Gestion de la souris pour la rotation
-            hologramContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
-            hologramContainer.addEventListener('pointerup', () => { isDragging = false; });
-            hologramContainer.addEventListener('pointerleave', () => { isDragging = false; });
-            hologramContainer.addEventListener('pointermove', (e) => {
-                if (!isDragging || !hologramModel) return;
+                const scale = (1.0 / maxDim) * 2.0;
+                logoModel.scale.set(scale, scale, scale);
+                logoModel.position.sub(center.multiplyScalar(scale));
+                logoModel.position.y -= 0.2;
+                scene.add(logoModel);
+            }, undefined, (error) => console.error('Erreur chargement Canva:', error));
+            
+            canvaContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
+            canvaContainer.addEventListener('pointerup', () => { isDragging = false; });
+            canvaContainer.addEventListener('pointerleave', () => { isDragging = false; });
+            canvaContainer.addEventListener('pointermove', (e) => {
+                if (!isDragging || !logoModel) return;
                 const deltaX = e.clientX - previousMousePosition.x;
-                hologramModel.rotation.y += deltaX * 0.02;
+                logoModel.rotation.y += deltaX * 0.02;
                 previousMousePosition.x = e.clientX;
             });
-            
-            animateHologram();
-        }
-        
-        function animateHologram() {
-            requestAnimationFrame(animateHologram);
-            if (hologramModel && !isDragging) {
-                hologramModel.rotation.y += 0.005; // Auto-rotation lente
+            function animateCanva() {
+                requestAnimationFrame(animateCanva);
+                if (logoModel && !isDragging) { logoModel.rotation.y += 0.005; }
+                if (renderer) renderer.render(scene, camera);
             }
-            // On utilise le composer pour le rendu, pas le renderer directement
-            if (composer) composer.render();
+            animateCanva();
         }
-        
-        initHologram();
+        initCanva();
     }
 
     // --- Scène 3D pour Ray-Ban ---
