@@ -2259,7 +2259,7 @@ window.addEventListener('scroll', function() {
             const renderScene = new RenderPass(scene, camera);
             const bloomPass = new UnrealBloomPass(
               new THREE.Vector2(hologramContainer.clientWidth, hologramContainer.clientHeight),
-              1.8, 0.5, 0.1
+              2.5, 0.6, 0.05
             );
             composer = new EffectComposer(renderer);
             composer.addPass(renderScene);
