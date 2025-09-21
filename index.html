@@ -22,29 +22,41 @@
     }
     /* Add your custom styles here */
 
-    /* NOUVEAU CSS POUR LES DEUX OBJETS CB */
+    /* NOUVEAU CSS POUR LES OBJETS 3D */
+
+    /* Positionnement des deux CB flottants */
+    #cb-top-right-container,
+    #cb-bottom-left-container {
+      position: fixed; /* Fixe par rapport à la fenêtre */
+      width: 200px;  /* Taille réduite */
+      height: 200px;
+      z-index: 40;   /* Au premier plan (juste en dessous du header qui est à 50) */
+      opacity: 0.15; /* Effet de fond discret */
+      pointer-events: none; /* Important: Laisse passer les clics de souris */
+    }
+
+    /* Placement spécifique */
     #cb-top-right-container {
       top: 10%;
       right: 5%;
-      width: 250px; /* Taille approximative */
-      height: 250px;
-      z-index: 0; /* Assurez-vous qu'il est en arrière-plan */
-      opacity: 0.2; /* Pour un effet discret */
-      pointer-events: auto; /* Permet l'interaction de la souris */
     }
-
     #cb-bottom-left-container {
       bottom: 10%;
       left: 5%;
-      width: 250px; /* Taille approximative */
-      height: 250px;
-      z-index: 0; /* Assurez-vous qu'il est en arrière-plan */
-      opacity: 0.2; /* Pour un effet discret */
-      pointer-events: auto; /* Permet l'interaction de la souris */
     }
 
-    /* Le floating est maintenant géré individuellement par JS */
-    /* L'ancienne animation floatAnimation n'est plus nécessaire dans le CSS */
+    /* Permet de grab UNIQUEMENT le modèle 3D et pas le carré vide autour */
+    #cb-top-right-container canvas,
+    #cb-bottom-left-container canvas {
+      pointer-events: auto;
+      cursor: grab;
+    }
+    
+    /* Assure que les Ray-Ban sont bien visibles dans leur section */
+    #rayban-3d-container {
+        position: relative;
+        z-index: 20;
+    }
 </style>
   <script src="https://cdn.tailwindcss.com"></script>
 <!--           ConveyThis Script Start         -->
@@ -68,7 +80,8 @@ o.onload=function(){window.trackingFunctions.onLoad({appId:"684c275fea7af6001df6
 document.head.appendChild(o)}initApollo();</script>
 </head>
 <body>
-  
+   <div id="cb-top-right-container" class="absolute hidden lg:block"></div>
+  <div id="cb-bottom-left-container" class="absolute hidden lg:block"></div>
                 
                 
 <div id="root">
@@ -1620,8 +1633,7 @@ document.head.appendChild(o)}initApollo();</script>
       <div class="absolute top-1/3 -left-20 w-64 h-64 bg-cyan-600/10 rounded-full filter blur-[80px]"></div>
       <div class="absolute bottom-1/3 -right-20 w-64 h-64 bg-purple-600/10 rounded-full filter blur-[80px]"></div>
       
-      <div id="cb-top-right-container" class="absolute hidden lg:block"></div>
-      <div id="cb-bottom-left-container" class="absolute hidden lg:block"></div>
+   
     </div>
     
     <div class="container mx-auto px-4 relative z-10">
@@ -1993,37 +2005,29 @@ window.addEventListener('scroll', function() {
         initHologram();
     }
 
-    // ====================================================================================
-    // --- Scène 3D pour Ray-Ban (CORRIGÉE et REVUE) ---
-    // ====================================================================================
+    // --- Scène 3D pour Ray-Ban (INCHANGÉ) ---
     const raybanContainer = document.getElementById('rayban-3d-container');
     if (raybanContainer) {
         let scene, camera, renderer, model;
-        let isDragging = false, previousMousePosition = { x: 0, y: 0 }; // Ajout de y pour rotation X
-        let currentRotationY = 0; // Pour reprendre la rotation après drag
-
+        let isDragging = false, previousMousePosition = { x: 0, y: 0 }; 
         function initRayban() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 1000);
             camera.position.set(0, 0, 5);
-            
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             raybanContainer.appendChild(renderer.domElement);
-            
             const pmremGenerator = new THREE.PMREMGenerator(renderer);
             pmremGenerator.compileEquirectangularShader();
-            
             new RGBELoader().load('warm_restaurant_night_4k.hdr', (texture) => {
                 const envMap = pmremGenerator.fromEquirectangular(texture).texture;
                 scene.environment = envMap;
                 texture.dispose();
                 pmremGenerator.dispose();
-            }, undefined, (error) => console.error('Erreur chargement HDR:', error)); // Ajout gestion d'erreur
-
+            }, undefined, (error) => console.error('Erreur chargement HDR:', error));
             const loader = new GLTFLoader();
             loader.load('./RAYBAN.glb', (gltf) => {
                 model = gltf.scene;
@@ -2032,14 +2036,13 @@ window.addEventListener('scroll', function() {
                 const center = box.getCenter(new THREE.Vector3());
                 if (size.length() > 0) {
                     const maxDim = Math.max(size.x, size.y, size.z);
-                    const scale = 3.5 / maxDim; // Ajuste cette valeur si la taille n'est pas bonne
+                    const scale = 3.5 / maxDim;
                     model.scale.set(scale, scale, scale);
                     model.position.sub(center.multiplyScalar(scale));
-                    model.position.y += 0.5; // Ajuste la position Y si besoin
+                    model.position.y += 0.5; 
                 }
                 scene.add(model);
             }, undefined, (error) => console.error('ERREUR DE CHARGEMENT RAYBAN:', error));
-
             raybanContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; previousMousePosition.y = e.clientY; });
             raybanContainer.addEventListener('pointerup', () => { isDragging = false; });
             raybanContainer.addEventListener('pointerleave', () => { isDragging = false; });
@@ -2048,11 +2051,10 @@ window.addEventListener('scroll', function() {
                 const deltaX = e.clientX - previousMousePosition.x;
                 const deltaY = e.clientY - previousMousePosition.y;
                 model.rotation.y += deltaX * 0.01;
-                model.rotation.x += deltaY * 0.01; // Permet de tourner sur l'axe X
+                model.rotation.x += deltaY * 0.01;
                 previousMousePosition.x = e.clientX;
                 previousMousePosition.y = e.clientY;
             });
-
             window.addEventListener('resize', () => {
                 if(!camera || !renderer) return;
                 camera.aspect = raybanContainer.clientWidth / raybanContainer.clientHeight;
@@ -2060,30 +2062,24 @@ window.addEventListener('scroll', function() {
                 renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             });
         }
-
         function animateRayban() {
             requestAnimationFrame(animateRayban);
             if (model && !isDragging) {
-                // Rotation automatique si pas de drag
                 model.rotation.y += 0.005;
             }
             if(renderer && scene && camera) renderer.render(scene, camera);
         }
         initRayban();
-        animateRayban();
     }
 
-    // ====================================================================================
-    // --- NOUVELLES FONCTIONS POUR LES DEUX "CB" EN ARRIÈRE-PLAN ---
-    // ====================================================================================
-
-    // Fonction générique pour initialiser et animer un modèle CB
-    function initCBModel(containerId, initialRotationX, initialRotationY, initialPositionX, initialPositionY) {
+    // --- SCRIPT POUR LES DEUX "CB" EN ARRIÈRE-PLAN ---
+    function initCBModel(containerId, initialRotationX, initialRotationY) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         let scene, camera, renderer, cbModel;
         let isDragging = false, previousMousePosition = { x: 0, y: 0 };
+        const clock = new THREE.Clock(); // Pour l'animation de flottement
 
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -2105,23 +2101,28 @@ window.addEventListener('scroll', function() {
             const center = box.getCenter(new THREE.Vector3());
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = (1.0 / maxDim) * 1.8;
+            const scale = (1.0 / maxDim) * 1.2; // TAILLE RÉDUITE
             cbModel.scale.set(scale, scale, scale);
             cbModel.position.sub(center.multiplyScalar(scale));
             
-            // Appliquer les rotations et positions initiales
             cbModel.rotation.x = initialRotationX;
             cbModel.rotation.y = initialRotationY;
-            cbModel.position.x = initialPositionX;
-            cbModel.position.y = initialPositionY;
 
             scene.add(cbModel);
         }, undefined, (error) => console.error(`Erreur chargement CB.glb pour ${containerId}:`, error));
         
-        container.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; previousMousePosition.y = e.clientY; });
-        container.addEventListener('pointerup', () => { isDragging = false; });
-        container.addEventListener('pointerleave', () => { isDragging = false; });
-        container.addEventListener('pointermove', (e) => {
+        container.addEventListener('pointerdown', (e) => { 
+            isDragging = true; 
+            container.style.cursor = 'grabbing';
+            previousMousePosition.x = e.clientX; 
+            previousMousePosition.y = e.clientY; 
+        });
+        window.addEventListener('pointerup', () => { 
+            isDragging = false; 
+            container.style.cursor = 'grab';
+        });
+        window.addEventListener('pointerleave', () => { isDragging = false; });
+        window.addEventListener('pointermove', (e) => {
             if (!isDragging || !cbModel) return;
             const deltaX = e.clientX - previousMousePosition.x;
             const deltaY = e.clientY - previousMousePosition.y;
@@ -2142,6 +2143,11 @@ window.addEventListener('scroll', function() {
 
         function animateCB() {
             requestAnimationFrame(animateCB);
+            if (cbModel && !isDragging) {
+                // Animation de flottement doux gérée en JS
+                const elapsedTime = clock.getElapsedTime();
+                cbModel.position.y = Math.sin(elapsedTime * 0.5) * 0.1;
+            }
             if (renderer && scene && camera) {
                 renderer.render(scene, camera);
             }
@@ -2149,11 +2155,9 @@ window.addEventListener('scroll', function() {
         animateCB();
     }
 
-    // Initialiser le CB en haut à droite
-    initCBModel('cb-top-right-container', 0.5, 0.8, 0, 0); // Rotations X, Y, Positions X, Y
-    // Initialiser le CB en bas à gauche
-    initCBModel('cb-bottom-left-container', -0.3, -0.6, 0, 0); // Rotations X, Y, Positions X, Y
-
+    // Initialiser les deux modèles CB avec des rotations différentes
+    initCBModel('cb-top-right-container', 0.5, 0.8);
+    initCBModel('cb-bottom-left-container', -0.3, -0.6);
 </script>
 </body>
 </html>
