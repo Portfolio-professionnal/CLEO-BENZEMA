@@ -2044,66 +2044,69 @@ window.addEventListener('scroll', function() {
     // ====================================================================================
     // --- SCRIPT CORRIGÉ POUR LES INITIALES "CB" (SANS BLOOM, BONNES COULEURS) ---
     // ====================================================================================
-    const cbContainer = document.getElementById('cb-floating-container');
-    if (cbContainer) {
-        let scene, camera, renderer, cbModel;
+  // ====================================================================================
+// --- SCRIPT FINAL POUR "CB" (SANS BLOOM, BONNES COULEURS, SANS ROTATION) ---
+// ====================================================================================
+const cbContainer = document.getElementById('cb-floating-container');
+if (cbContainer) {
+    let scene, camera, renderer, cbModel;
 
-        function initCB() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, cbContainer.clientWidth / cbContainer.clientHeight, 0.1, 1000);
-            camera.position.z = 1.5; // J'ai rapproché un peu la caméra
+    function initCB() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, cbContainer.clientWidth / cbContainer.clientHeight, 0.1, 1000);
+        camera.position.z = 1.5;
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            
-            // CORRECTION COULEUR : On définit le bon espace de couleur
-            renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        // CORRECTION DE LA COULEUR
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-            renderer.setSize(cbContainer.clientWidth, cbContainer.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            cbContainer.appendChild(renderer.domElement);
+        renderer.setSize(cbContainer.clientWidth, cbContainer.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        cbContainer.appendChild(renderer.domElement);
 
-            // Ajout d'une lumière simple pour que le matériau soit visible
-            const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Lumière d'ambiance
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Lumière directionnelle
-            directionalLight.position.set(5, 5, 5);
-            scene.add(directionalLight);
+        // Ajout de lumières basiques pour que le modèle soit visible correctement
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
 
-            const loader = new GLTFLoader();
-            loader.load('./CB.glb', (gltf) => {
-                cbModel = gltf.scene;
-                const box = new THREE.Box3().setFromObject(cbModel);
-                const center = box.getCenter(new THREE.Vector3());
-                const size = box.getSize(new THREE.Vector3());
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = (1.0 / maxDim) * 1.8; // Ajuste la taille si besoin
-                cbModel.scale.set(scale, scale, scale);
-                cbModel.position.sub(center.multiplyScalar(scale));
-                scene.add(cbModel);
-            }, undefined, (error) => console.error('Erreur chargement CB.glb:', error));
-            
-            window.addEventListener('resize', () => {
-                if (!camera || !renderer) return;
-                const width = cbContainer.clientWidth;
-                const height = cbContainer.clientHeight;
-                camera.aspect = width / height;
-                camera.updateProjectionMatrix();
-                renderer.setSize(width, height);
-            });
+        const loader = new GLTFLoader();
+        loader.load('./CB.glb', (gltf) => {
+            cbModel = gltf.scene;
+            const box = new THREE.Box3().setFromObject(cbModel);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scale = (1.0 / maxDim) * 1.8;
+            cbModel.scale.set(scale, scale, scale);
+            cbModel.position.sub(center.multiplyScalar(scale));
+            scene.add(cbModel);
+        }, undefined, (error) => console.error('Erreur chargement CB.glb:', error));
+        
+        window.addEventListener('resize', () => {
+            if (!camera || !renderer) return;
+            const width = cbContainer.clientWidth;
+            const height = cbContainer.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
 
-            animateCB();
-        }
-
-        function animateCB() {
-            requestAnimationFrame(animateCB);
-            // IMPORTANT : On utilise le rendu simple, sans l'effet "composer"
-            if (renderer && scene && camera) {
-                renderer.render(scene, camera);
-            }
-        }
-
-        initCB();
+        animateCB();
     }
+
+    function animateCB() {
+        requestAnimationFrame(animateCB);
+        // On utilise le rendu simple, SANS composer, donc SANS bloom/glare.
+        if (renderer && scene && camera) {
+            renderer.render(scene, camera);
+        }
+    }
+
+    initCB();
+}
 </script>
 </body>
 </html>
