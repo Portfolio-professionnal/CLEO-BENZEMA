@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio de Cléo Benzema</title>
-  <style>
+<style>
     /* Reset CSS */
     * {
       margin: 0;
@@ -21,7 +21,19 @@
       height: auto;
     }
     /* Add your custom styles here */
-  </style>
+
+    /* CODE AJOUTÉ POUR L'EFFET FLOTTANT */
+    @keyframes floatAnimation {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    #cb-floating-container {
+      animation: floatAnimation 6s ease-in-out infinite;
+    }
+    /* FIN DU CODE AJOUTÉ */
+</style>
   <script src="https://cdn.tailwindcss.com"></script>
 <!--           ConveyThis Script Start         -->
 <script src="//cdn.conveythis.com/javascript/conveythis.js?api_key=pub_1d96e7c7f0b09ab8d5607302b216bf7b"></script>
