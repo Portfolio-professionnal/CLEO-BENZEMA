@@ -1935,40 +1935,52 @@ window.addEventListener('scroll', function() {
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+// --- NOUVELLES IMPORTATIONS POUR LE BLOOM ---
     import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
     import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
     import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-    // --- Scène 3D pour l'Hologramme (Code original restauré) ---
+    // --- Scène 3D pour l'Hologramme ---
     const hologramContainer = document.getElementById('hologram-3d-container');
     if (hologramContainer) {
         let scene, camera, renderer, hologramModel, composer;
         let isDragging = false, previousMousePosition = { x: 0 };
-        function initHologram(){
+        
+        function initHologram() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, hologramContainer.clientWidth / hologramContainer.clientHeight, 0.1, 1000);
-            camera.position.z = 2;
-            renderer = new THREE.WebGLRenderer({ antias: true, alpha: true });
+            camera.position.z = 2; // On recule la caméra
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(hologramContainer.clientWidth, hologramContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             hologramContainer.appendChild(renderer.domElement);
+            
             const loader = new GLTFLoader();
+            // ASSURE-TOI QUE LE NOM DU FICHIER EST CORRECT
             loader.load('./AXEOBIMHOLOGRAM.glb', (gltf) => {
                 hologramModel = gltf.scene;
                 const box = new THREE.Box3().setFromObject(hologramModel);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = (1.0 / maxDim) * 2.5;
+                const scale = (1.0 / maxDim) * 2.5; 
                 hologramModel.scale.set(scale, scale, scale);
                 hologramModel.position.sub(center.multiplyScalar(scale));
                 scene.add(hologramModel);
             }, undefined, (error) => console.error('Erreur chargement Hologramme:', error));
+
+            // Ajout de l'effet Bloom
             const renderScene = new RenderPass(scene, camera);
-            const bloomPass = new UnrealBloomPass(new THREE.Vector2(hologramContainer.clientWidth, hologramContainer.clientHeight), 3.5, 1.0, 0.05);
+            const bloomPass = new UnrealBloomPass(
+              new THREE.Vector2(hologramContainer.clientWidth, hologramContainer.clientHeight),
+              3.5, 1.0, 0.05
+            );
             composer = new EffectComposer(renderer);
             composer.addPass(renderScene);
             composer.addPass(bloomPass);
+
+            // Gestion de la rotation
             hologramContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
             hologramContainer.addEventListener('pointerup', () => { isDragging = false; });
             hologramContainer.addEventListener('pointerleave', () => { isDragging = false; });
@@ -1978,6 +1990,8 @@ window.addEventListener('scroll', function() {
                 hologramModel.rotation.y += deltaX * 0.02;
                 previousMousePosition.x = e.clientX;
             });
+            
+            // Gestion du redimensionnement de la fenêtre
             window.addEventListener('resize', () => {
                 if (!camera || !renderer) return;
                 const width = hologramContainer.clientWidth;
@@ -1987,41 +2001,49 @@ window.addEventListener('scroll', function() {
                 renderer.setSize(width, height);
                 composer.setSize(width, height);
             });
+
             animateHologram();
         }
+        
         function animateHologram() {
             requestAnimationFrame(animateHologram);
             if (hologramModel && !isDragging) {
                 hologramModel.rotation.y += 0.003;
             }
-            composer.render();
+            composer.render(); // On utilise le composer pour le rendu
         }
+        
         initHologram();
     }
 
-    // --- Scène 3D pour Ray-Ban (Code original restauré) ---
+    // --- Scène 3D pour Ray-Ban ---
     const raybanContainer = document.getElementById('rayban-3d-container');
     if (raybanContainer) {
         let scene, camera, renderer, model;
         let isDragging = false, previousMousePosition = { x: 0 };
+
         function initRayban() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(50, raybanContainer.clientWidth / raybanContainer.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 5);
+            camera.position.set(0, 0, 5); // On recule la caméra
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             raybanContainer.appendChild(renderer.domElement);
+            
             const pmremGenerator = new THREE.PMREMGenerator(renderer);
             pmremGenerator.compileEquirectangularShader();
-            new RGBELoader().load('warm_restaurant_night_4k.hdr', (texture) => {
-                const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-                scene.environment = envMap;
-                texture.dispose();
-                pmremGenerator.dispose();
-            });
+            
+            new RGBELoader()
+                .load('warm_restaurant_night_4k.hdr', (texture) => {
+                    const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+                    scene.environment = envMap;
+                    texture.dispose();
+                    pmremGenerator.dispose();
+                });
+
             const loader = new GLTFLoader();
             loader.load('./RAYBAN.glb', (gltf) => {
                 model = gltf.scene;
@@ -2036,6 +2058,7 @@ window.addEventListener('scroll', function() {
                 }
                 scene.add(model);
             }, undefined, (error) => console.error('ERREUR DE CHARGEMENT RAYBAN:', error));
+
             renderer.domElement.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
             renderer.domElement.addEventListener('mouseup', () => { isDragging = false; });
             renderer.domElement.addEventListener('mouseleave', () => { isDragging = false; });
@@ -2052,6 +2075,7 @@ window.addEventListener('scroll', function() {
                 renderer.setSize(raybanContainer.clientWidth, raybanContainer.clientHeight);
             });
         }
+
         function animateRayban() {
             requestAnimationFrame(animateRayban);
             if (model && !isDragging) { model.rotation.y += 0.005; }
@@ -2059,99 +2083,7 @@ window.addEventListener('scroll', function() {
         }
         initRayban();
     }
-
-    // --- SCRIPT POUR LES DEUX "CB" EN ARRIÈRE-PLAN ---
-    function initCBModel(containerId, initialRotationX, initialRotationY) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        let scene, camera, renderer, cbModel;
-        let isDragging = false, previousMousePosition = { x: 0, y: 0 };
-        const clock = new THREE.Clock();
-
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.z = 1.8;
-
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.outputColorSpace = THREE.SRGBColorSpace;
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
-        scene.add(ambientLight);
-
-        const loader = new GLTFLoader();
-        loader.load('./CB.glb', (gltf) => {
-            cbModel = gltf.scene;
-            const box = new THREE.Box3().setFromObject(cbModel);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
-            const maxDim = Math.max(size.x, size.y, size.z);
-            const scale = (1.0 / maxDim) * 1.8; // Taille ajustée
-            cbModel.scale.set(scale, scale, scale);
-            cbModel.position.sub(center.multiplyScalar(scale));
-            
-            cbModel.rotation.x = initialRotationX;
-            cbModel.rotation.y = initialRotationY;
-
-            scene.add(cbModel);
-        }, undefined, (error) => console.error(`Erreur chargement CB.glb pour ${containerId}:`, error));
-        
-        container.addEventListener('pointerdown', (e) => { 
-            isDragging = true; 
-            container.style.cursor = 'grabbing';
-            previousMousePosition.x = e.clientX; 
-            previousMousePosition.y = e.clientY; 
-        });
-        window.addEventListener('pointerup', () => { 
-            isDragging = false; 
-            container.style.cursor = 'grab';
-        });
-        // On utilise 'window' pour pointermove et leave pour une meilleure expérience
-        window.addEventListener('pointermove', (e) => {
-            if (!isDragging || !cbModel) return;
-            // On vérifie si la souris est bien sur le bon container
-            if (e.target.parentElement.id !== containerId) {
-                isDragging = false;
-                container.style.cursor = 'grab';
-                return;
-            }
-            const deltaX = e.clientX - previousMousePosition.x;
-            const deltaY = e.clientY - previousMousePosition.y;
-            cbModel.rotation.y += deltaX * 0.01;
-            cbModel.rotation.x += deltaY * 0.01;
-            previousMousePosition.x = e.clientX;
-            previousMousePosition.y = e.clientY;
-        });
-
-        window.addEventListener('resize', () => {
-            if (!camera || !renderer) return;
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-        });
-
-        function animateCB() {
-            requestAnimationFrame(animateCB);
-            if (cbModel && !isDragging) {
-                // Animation de flottement doux
-                const elapsedTime = clock.getElapsedTime();
-                cbModel.position.y = Math.sin(elapsedTime * 0.5) * 0.1;
-            }
-            if (renderer && scene && camera) {
-                renderer.render(scene, camera);
-            }
-        }
-        animateCB();
-    }
-
-    // Initialiser les deux modèles CB avec des rotations différentes
-    initCBModel('cb-top-right-container', 0.5, 0.8);
-    initCBModel('cb-bottom-left-container', -0.3, -0.6);
 </script>
+
 </body>
 </html>
