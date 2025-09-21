@@ -2205,7 +2205,7 @@ window.addEventListener('scroll', function() {
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = (1.0 / maxDim) * 3.5; 
+                const scale = (1.0 / maxDim) * 5.5; 
                 hologramModel.scale.set(scale, scale, scale);
                 hologramModel.position.sub(center.multiplyScalar(scale));
                 scene.add(hologramModel);
