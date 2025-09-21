@@ -1729,12 +1729,10 @@ document.head.appendChild(o)}initApollo();</script>
 
         <!-- Call to Action Card -->
         <div class="flex flex-col justify-center">
-          <div class="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-xl p-8 border border-neutral-700 shadow-lg text-center">
-            <div class="w-20 h-20 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-              </svg>
-            </div>
+        <div class="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-xl p-8 border border-neutral-700 shadow-lg text-center">
+    <div id="cb-3d-container" class="w-48 h-48 mx-auto mb-6 cursor-grab active:cursor-grabbing animate-bounce">
+        </div>
+    ...
             <h3 class="text-2xl font-bold mb-4">Prêt à collaborer ?</h3>
             <p class="text-gray-300 mb-8 max-w-md mx-auto">
               Que ce soit pour une stratégie de growth marketing, un site web professionnel ou une campagne de contenu, 
@@ -2052,6 +2050,87 @@ window.addEventListener('scroll', function() {
         }
         initRayban();
         animateRayban();
+    }
+ // --- NOUVELLE SCÈNE 3D POUR LES INITIALES "CB" ---
+    // =======================================================================
+    const cbContainer = document.getElementById('cb-3d-container');
+    if (cbContainer) {
+        let scene, camera, renderer, cbModel, composer, clock;
+        let isDragging = false, previousMousePosition = { x: 0 };
+
+        function initCB() {
+            scene = new THREE.Scene();
+            clock = new THREE.Clock(); // Pour l'animation si besoin
+
+            camera = new THREE.PerspectiveCamera(75, cbContainer.clientWidth / cbContainer.clientHeight, 0.1, 1000);
+            camera.position.z = 3; // Position de la caméra
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(cbContainer.clientWidth, cbContainer.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            cbContainer.appendChild(renderer.domElement);
+
+            const loader = new GLTFLoader();
+            // 2. On charge ton modèle CB.glb
+            loader.load('./CB.glb', (gltf) => {
+                cbModel = gltf.scene;
+                // Centrer et redimensionner le modèle automatiquement
+                const box = new THREE.Box3().setFromObject(cbModel);
+                const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const scale = (1.0 / maxDim) * 2.5; // Ajuste le "2.5" pour changer la taille
+                cbModel.scale.set(scale, scale, scale);
+                cbModel.position.sub(center.multiplyScalar(scale));
+                scene.add(cbModel);
+            }, undefined, (error) => console.error('Erreur chargement CB.glb:', error));
+
+            // 3. On ajoute un effet de lueur (Bloom)
+            const renderScene = new RenderPass(scene, camera);
+            const bloomPass = new UnrealBloomPass(
+                new THREE.Vector2(cbContainer.clientWidth, cbContainer.clientHeight),
+                2.0, // intensity
+                0.5, // strength
+                0.1  // radius
+            );
+            composer = new EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Gestion de la rotation avec la souris
+            cbContainer.addEventListener('pointerdown', (e) => { isDragging = true; previousMousePosition.x = e.clientX; });
+            cbContainer.addEventListener('pointerup', () => { isDragging = false; });
+            cbContainer.addEventListener('pointerleave', () => { isDragging = false; });
+            cbContainer.addEventListener('pointermove', (e) => {
+                if (!isDragging || !cbModel) return;
+                const deltaX = e.clientX - previousMousePosition.x;
+                cbModel.rotation.y += deltaX * 0.02;
+                previousMousePosition.x = e.clientX;
+            });
+            
+            window.addEventListener('resize', () => {
+                if (!camera || !renderer) return;
+                const width = cbContainer.clientWidth;
+                const height = cbContainer.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+                composer.setSize(width, height);
+            });
+
+            animateCB();
+        }
+
+        function animateCB() {
+            requestAnimationFrame(animateCB);
+            if (cbModel && !isDragging) {
+                // Rotation automatique lente
+                cbModel.rotation.y += 0.004;
+            }
+            composer.render();
+        }
+
+        initCB();
     }
 </script>
 </body>
