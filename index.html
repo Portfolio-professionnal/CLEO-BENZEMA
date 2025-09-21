@@ -2205,7 +2205,7 @@ const hologramContainer = document.getElementById('hologram-floating-container')
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-const scale = (1.0 / maxDim) * 1.8; // On réduit un peu la taille pour mieux voir l'effet
+const scale = (1.0 / maxDim) * 1.0; // On réduit un peu la taille pour mieux voir l'effet
                 hologramModel.scale.set(scale, scale, scale);
                 hologramModel.position.sub(center.multiplyScalar(scale));
                 scene.add(hologramModel);
