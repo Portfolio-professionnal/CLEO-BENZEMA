@@ -21,42 +21,6 @@
       height: auto;
     }
     /* Add your custom styles here */
-
-    /* NOUVEAU CSS POUR LES OBJETS 3D */
-
-    /* Positionnement des deux CB flottants */
-    #cb-top-right-container,
-    #cb-bottom-left-container {
-      position: absolute; /* Position par rapport à la section Contact */
-      width: 350px;  /* Plus grand pour ne pas couper le modèle */
-      height: 350px;
-      z-index: 20;   /* Au premier plan, par-dessus le contenu z-10 */
-      opacity: 0.15;
-      pointer-events: none; /* Laisse passer les clics */
-    }
-
-    /* Placement spécifique */
-    #cb-top-right-container {
-      top: -50px;     /* Permet de déborder en haut */
-      right: -50px;   /* Permet de déborder à droite */
-    }
-    #cb-bottom-left-container {
-      bottom: -50px;  /* Permet de déborder en bas */
-      left: -50px;    /* Permet de déborder à gauche */
-    }
-
-    /* Permet de grab UNIQUEMENT le modèle 3D */
-    #cb-top-right-container canvas,
-    #cb-bottom-left-container canvas {
-      pointer-events: auto;
-      cursor: grab;
-    }
-    
-    /* Assure que les Ray-Ban sont bien visibles */
-    #rayban-3d-container {
-        position: relative;
-        z-index: 20;
-    }
 </style>
   <script src="https://cdn.tailwindcss.com"></script>
 <!--           ConveyThis Script Start         -->
