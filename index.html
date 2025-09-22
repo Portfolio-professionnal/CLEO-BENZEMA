@@ -1528,7 +1528,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               scene.add(directionalLight);
 
               const loader = new GLTFLoader();
-              loader.load('./ton_fichier_ecouteurs.glb', (gltf) => {
+              loader.load('./ecouteur.glb', (gltf) => {
                   model = gltf.scene;
                   const box = new THREE.Box3().setFromObject(model);
                   const size = box.getSize(new THREE.Vector3());
