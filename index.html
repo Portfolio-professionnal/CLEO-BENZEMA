@@ -1510,6 +1510,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
      // --- Scène 3D pour les Écouteurs ---
 // --- Scène 3D pour les Écouteurs ---
 // --- Scène 3D pour les Écouteurs ---
+  // --- Scène 3D pour les Écouteurs ---
       const earbudsContainer = document.getElementById('earbuds-3d-container');
       if (earbudsContainer) {
           let scene, camera, renderer, model, mixer, clock;
@@ -1524,7 +1525,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               
               renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
               renderer.setSize(earbudsContainer.clientWidth, earbudsContainer.clientHeight);
-              renderer.setPixelRatio(window.devicePixelRatio);
+              // Optimisation des performances
+              renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
               renderer.toneMapping = THREE.ACESFilmicToneMapping;
               renderer.outputColorSpace = THREE.SRGBColorSpace;
               earbudsContainer.appendChild(renderer.domElement);
@@ -1536,7 +1538,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               scene.add(directionalLight);
 
               const loader = new GLTFLoader();
-              loader.load('./ecouteur.glb', (gltf) => {
+              loader.load('./ecouteur.glb', (gltf) => { // Assure-toi que le nom du fichier est correct
                   model = gltf.scene;
                   const box = new THREE.Box3().setFromObject(model);
                   const size = box.getSize(new THREE.Vector3());
@@ -1544,34 +1546,32 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                   
                   if (size.length() > 0) {
                       const maxDim = Math.max(size.x, size.y, size.z);
-                      const scale = 2.5 / maxDim; 
+                      const scale = 3.5 / maxDim; 
                       model.scale.set(scale, scale, scale);
-                      model.position.sub(center.multiplyScalar(scale));
+                      
+                      // ✅ LA CORRECTION EST ICI ✅
+                      // On déplace le modèle pour que son centre soit au point (0,0,0)
+                      model.position.sub(center.multiplyScalar(scale)); 
                   }
+                  
                   scene.add(model);
 
-                  // --- MODIFICATION : GESTION DE LA BOUCLE SYNCHRONISÉE ---
+                  // --- Gestion de la boucle synchronisée ---
                   mixer = new THREE.AnimationMixer(model);
-
-                  // 1. On prépare toutes les actions d'animation
                   const actions = [];
                   gltf.animations.forEach((clip) => {
                       const action = mixer.clipAction(clip);
-                      action.setLoop(THREE.LoopOnce); // IMPORTANT : Jouer l'animation une seule fois
-                      action.clampWhenFinished = true; // IMPORTANT : Garder la position de fin
+                      action.setLoop(THREE.LoopOnce);
+                      action.clampWhenFinished = true;
                       actions.push(action);
                   });
 
-                  // 2. On met un "écouteur" sur le mixer.
-                  // Dès qu'une animation se termine, il exécute cette fonction.
                   mixer.addEventListener('finished', () => {
-                      // 3. On relance TOUTES les animations en même temps
                       actions.forEach(action => {
                           action.reset().play();
                       });
                   });
 
-                  // 4. On lance toutes les animations la première fois
                   actions.forEach(action => {
                       action.play();
                   });
@@ -1585,6 +1585,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               renderer.domElement.addEventListener('mousemove', (e) => {
                   if (!isDragging || !model) return;
                   const deltaMove = e.clientX - previousMousePosition.x;
+                  // La rotation se fait maintenant autour du bon centre
                   model.rotation.y += deltaMove * 0.01;
                   previousMousePosition.x = e.clientX;
               });
