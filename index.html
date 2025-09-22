@@ -1544,7 +1544,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                   
                   if (size.length() > 0) {
                       const maxDim = Math.max(size.x, size.y, size.z);
-                      const scale = 3.5 / maxDim; 
+                      const scale = 2.5 / maxDim; 
                       model.scale.set(scale, scale, scale);
                       model.position.sub(center.multiplyScalar(scale));
                   }
