@@ -1501,6 +1501,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       initCBModel('cb-bottom-left-container', { x: -0.2, y: 0.3, z: -0.1 });
      // --- Scène 3D pour les Écouteurs ---
 // --- Scène 3D pour les Écouteurs ---
+// --- Scène 3D pour les Écouteurs ---
       const earbudsContainer = document.getElementById('earbuds-3d-container');
       if (earbudsContainer) {
           let scene, camera, renderer, model, mixer, clock;
@@ -1541,13 +1542,30 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                   }
                   scene.add(model);
 
-                  // --- MODIFICATION : ON JOUE TOUTES LES ANIMATIONS ---
+                  // --- MODIFICATION : GESTION DE LA BOUCLE SYNCHRONISÉE ---
                   mixer = new THREE.AnimationMixer(model);
-                  
-                  // On fait une boucle sur toutes les animations trouvées dans le fichier
-                  // et on les lance toutes.
+
+                  // 1. On prépare toutes les actions d'animation
+                  const actions = [];
                   gltf.animations.forEach((clip) => {
-                      mixer.clipAction(clip).play();
+                      const action = mixer.clipAction(clip);
+                      action.setLoop(THREE.LoopOnce); // IMPORTANT : Jouer l'animation une seule fois
+                      action.clampWhenFinished = true; // IMPORTANT : Garder la position de fin
+                      actions.push(action);
+                  });
+
+                  // 2. On met un "écouteur" sur le mixer.
+                  // Dès qu'une animation se termine, il exécute cette fonction.
+                  mixer.addEventListener('finished', () => {
+                      // 3. On relance TOUTES les animations en même temps
+                      actions.forEach(action => {
+                          action.reset().play();
+                      });
+                  });
+
+                  // 4. On lance toutes les animations la première fois
+                  actions.forEach(action => {
+                      action.play();
                   });
                   // ----------------------------------------------------
 
