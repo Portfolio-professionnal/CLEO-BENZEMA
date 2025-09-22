@@ -1500,14 +1500,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       initCBModel('cb-top-right-container', { x: 0.4, y: -0.5, z: 0.2 });
       initCBModel('cb-bottom-left-container', { x: -0.2, y: 0.3, z: -0.1 });
      // --- Scène 3D pour les Écouteurs ---
+// --- Scène 3D pour les Écouteurs ---
       const earbudsContainer = document.getElementById('earbuds-3d-container');
       if (earbudsContainer) {
-          // AJOUT : On déclare les variables pour l'animation ici
           let scene, camera, renderer, model, mixer, clock;
           let isDragging = false, previousMousePosition = { x: 0 };
 
           function initEarbuds() {
-              // AJOUT : On crée une horloge pour suivre le temps qui passe
               clock = new THREE.Clock();
 
               scene = new THREE.Scene();
@@ -1528,7 +1527,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               scene.add(directionalLight);
 
               const loader = new GLTFLoader();
-              loader.load('./ecouteur.glb', (gltf) => {
+              loader.load('./ton_fichier_ecouteurs.glb', (gltf) => {
                   model = gltf.scene;
                   const box = new THREE.Box3().setFromObject(model);
                   const size = box.getSize(new THREE.Vector3());
@@ -1542,16 +1541,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                   }
                   scene.add(model);
 
-                  // --- AJOUT : DÉMARRAGE DE L'ANIMATION DU FICHIER ---
-                  // 1. On crée le "lecteur" d'animation (le Mixer)
+                  // --- MODIFICATION : ON JOUE TOUTES LES ANIMATIONS ---
                   mixer = new THREE.AnimationMixer(model);
                   
-                  // 2. On vérifie s'il y a des animations dans le fichier
-                  if (gltf.animations.length > 0) {
-                      // 3. On prend la première animation et on la lance
-                      const action = mixer.clipAction(gltf.animations[0]);
-                      action.play();
-                  }
+                  // On fait une boucle sur toutes les animations trouvées dans le fichier
+                  // et on les lance toutes.
+                  gltf.animations.forEach((clip) => {
+                      mixer.clipAction(clip).play();
+                  });
                   // ----------------------------------------------------
 
               }, undefined, (error) => console.error('ERREUR DE CHARGEMENT ECOUTEURS:', error));
@@ -1577,15 +1574,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
           function animateEarbuds() {
               requestAnimationFrame(animateEarbuds);
 
-              // MODIFIÉ : On met à jour l'animation du fichier à chaque image
-              const delta = clock.getDelta(); // Temps écoulé depuis la dernière image
+              const delta = clock.getDelta();
               if (mixer) {
                   mixer.update(delta);
               }
               
-              // SUPPRIMÉ : La ligne de rotation manuelle est enlevée
-              // if (model && !isDragging) { model.rotation.y += 0.005; }
-
               if(renderer && scene && camera) renderer.render(scene, camera);
           }
 
