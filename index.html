@@ -1511,6 +1511,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // --- Scène 3D pour les Écouteurs ---
 // --- Scène 3D pour les Écouteurs ---
   // --- Scène 3D pour les Écouteurs ---
+// --- Scène 3D pour les Écouteurs (AVEC RECENTRAGE DANS LE CODE) ---
       const earbudsContainer = document.getElementById('earbuds-3d-container');
       if (earbudsContainer) {
           let scene, camera, renderer, model, mixer, clock;
@@ -1525,7 +1526,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               
               renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
               renderer.setSize(earbudsContainer.clientWidth, earbudsContainer.clientHeight);
-              // Optimisation des performances
               renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
               renderer.toneMapping = THREE.ACESFilmicToneMapping;
               renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1538,10 +1538,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               scene.add(directionalLight);
 
               const loader = new GLTFLoader();
-              loader.load('./ecouteur.glb', (gltf) => { // Assure-toi que le nom du fichier est correct
+              loader.load('./ecouteur.glb', (gltf) => {
                   model = gltf.scene;
+
+                  // --- LA PARTIE IMPORTANTE EST ICI ---
+                  // 1. On crée une "boîte" invisible autour du modèle pour connaître ses dimensions
                   const box = new THREE.Box3().setFromObject(model);
                   const size = box.getSize(new THREE.Vector3());
+                  
+                  // 2. On trouve le centre géométrique de cette boîte
                   const center = box.getCenter(new THREE.Vector3());
                   
                   if (size.length() > 0) {
@@ -1549,14 +1554,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                       const scale = 3.5 / maxDim; 
                       model.scale.set(scale, scale, scale);
                       
-                      // ✅ LA CORRECTION EST ICI ✅
-                      // On déplace le modèle pour que son centre soit au point (0,0,0)
+                      // 3. ON FORCE LE RECENTRAGE DU PIVOT
+                      // On déplace le modèle dans la direction opposée de son centre
                       model.position.sub(center.multiplyScalar(scale)); 
                   }
+                  // --- FIN DE LA PARTIE IMPORTANTE ---
                   
                   scene.add(model);
 
-                  // --- Gestion de la boucle synchronisée ---
+                  // Le reste du code pour l'animation ne change pas
                   mixer = new THREE.AnimationMixer(model);
                   const actions = [];
                   gltf.animations.forEach((clip) => {
@@ -1565,17 +1571,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                       action.clampWhenFinished = true;
                       actions.push(action);
                   });
-
                   mixer.addEventListener('finished', () => {
-                      actions.forEach(action => {
-                          action.reset().play();
-                      });
+                      actions.forEach(action => { action.reset().play(); });
                   });
-
-                  actions.forEach(action => {
-                      action.play();
-                  });
-                  // ----------------------------------------------------
+                  actions.forEach(action => { action.play(); });
 
               }, undefined, (error) => console.error('ERREUR DE CHARGEMENT ECOUTEURS:', error));
 
@@ -1585,8 +1584,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
               renderer.domElement.addEventListener('mousemove', (e) => {
                   if (!isDragging || !model) return;
                   const deltaMove = e.clientX - previousMousePosition.x;
-                  // La rotation se fait maintenant autour du bon centre
-                  model.rotation.y += deltaMove * 0.01;
+                  model.rotation.y += deltaMove * 0.01; // La rotation se fait maintenant autour du bon centre
                   previousMousePosition.x = e.clientX;
               });
               
@@ -1600,12 +1598,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
           function animateEarbuds() {
               requestAnimationFrame(animateEarbuds);
-
               const delta = clock.getDelta();
-              if (mixer) {
-                  mixer.update(delta);
-              }
-              
+              if (mixer) mixer.update(delta);
               if(renderer && scene && camera) renderer.render(scene, camera);
           }
 
